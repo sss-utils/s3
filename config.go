@@ -10,8 +10,9 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 )
 
-type TimeSettings struct {
+type LinkSettings struct {
 	LiveTimeDuration time.Duration
+	MaxSizeByte      int
 }
 
 type Settings struct {
@@ -22,8 +23,8 @@ type Settings struct {
 	SecretKey    string
 	UsePathStyle bool
 
-	Upload   *TimeSettings
-	Download *TimeSettings
+	Upload   *LinkSettings
+	Download *LinkSettings
 }
 
 type conf struct {
@@ -56,14 +57,16 @@ func New(settings Settings) Config {
 	})
 
 	if settings.Upload == nil {
-		settings.Upload = &TimeSettings{
+		settings.Upload = &LinkSettings{
 			LiveTimeDuration: 15 * time.Minute,
+			MaxSizeByte:      200 * 1024,
 		}
 	}
 
 	if settings.Download == nil {
-		settings.Download = &TimeSettings{
+		settings.Download = &LinkSettings{
 			LiveTimeDuration: 15 * time.Minute,
+			MaxSizeByte:      200 * 1024,
 		}
 	}
 
